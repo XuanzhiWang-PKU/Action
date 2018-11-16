@@ -1,0 +1,94 @@
+﻿/********       关节矫正      ×××××××××××××/
+
+get representation:MotionRequest
+
+motion=stands
+
+get representation:JointRequest
+
+save representation:JointCalibration
+
+
+// set representation:JointRequest unchanged   //据说可用于相机矫正时转动头部
+
+
+
+	
+/****   Manually Adjusting Joint Offsets******/
+
+
+mr StandOutput CalibrationStand				
+
+
+get representation:JointCalibration		 //either
+
+
+vd representation:JointCalibration				//or  、输入了上面的，矫正好后不输入这句，														这是不同方法的矫正！！
+
+
+
+
+/*******************Using the JointCalibrator**************/
+/////在上面的文档中说矫正时两种方法，使用了manually adjust 就不用这个//////
+
+call JointCalibrator
+
+
+dr module:JointCalibrator:reset
+
+get module:JointCalibrator:offsets
+
+vd module:JointCalibrator:offsets
+
+
+
+
+
+/××××××××        Straightening Up the NAO    ×××××××××××××××/
+
+get representatioegn:CameraCalibration
+
+call JointCalibrator
+
+/*********************
+Copy the values of bodyRotationCorrection (representation CameraCalibration) into bodyRotation
+(representation JointCalibration). Afterwards, set bodyRotationCorrection (representation Cam-
+eraCalibration) to zero. Another way to make these actions more or less automatically is possible
+by using the AutomaticCameraCalibrator with the automation flag
+*******************/
+
+save representation:JointCalibration
+save representation:CameraCalibration
+
+
+
+
+/××××××××××××          Camera Calibration      ××××××××××××××××/
+
+
+/××××××    1、     Manual Calibration with the CameraCalibrator     ×××××/
+
+将机器人放在一个确定坐标点的点 如罚球点或中点
+
+call CameraCali-brators/Default
+
+输入机器人的坐标
+
+采集点     The head can be moved by clicking into an image view while holding the shift key down. 9 The head will then look at that position.
+
+Run the automatic calibration process by pressing Shift+Ctrl+O 10 and wait until the
+optimization has converged. You can always go back to collecting more points by pressing
+Shift+Ctrl+C.
+
+
+
+
+颜色校准：
+
+get representation:UpperCameraSettings
+
+get representation:LowerCameraSettings
+
+dr module : CameraProvider:DoWhiteBalanceUpper
+
+dr module : CameraProvider:DoWhiteBalanceLower
